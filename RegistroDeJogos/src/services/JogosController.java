@@ -20,10 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 public class JogosController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	int i = 0;
+	List<Jogo> lista = new ArrayList<>();
+
 	public void init(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
-		List<Jogo> lista = new ArrayList<>();
 		getServletContext().setAttribute("JOGOS", lista);
+
 		String sql = "select nome, dificuldade from jogos";
 
 		try {
@@ -48,26 +51,18 @@ public class JogosController extends HttpServlet {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-
-		for (int i = 0; i < lista.size(); i++) {
-			System.out.println(lista.get(i));
-			System.out.println("teste");
-		}
-
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		response.getWriter().append("<html><h1>Acesse a pagina <a href=\"./jogos.jsp\">./jogos.jsp</a></h1></html>");
+		
+		doPost(request, response);
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		init();
-		
 		String txtNome = request.getParameter("txtNome");
 		String txtDificuldade = request.getParameter("txtDificuldade");
 
@@ -100,7 +95,36 @@ public class JogosController extends HttpServlet {
 				response.sendRedirect("./jogos.jsp");
 			}
 		} else {
-			// TO DO
+
+			String sql = "select nome, dificuldade from jogos order by nome";
+
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "SYSTEM", "admin");
+				PreparedStatement stmt = con.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery(sql);
+
+				while (rs.next()) {
+					Jogo j = new Jogo(rs.getString(1), rs.getString(2));
+					lista.add(j);
+				}
+
+				getServletContext().removeAttribute("JOGOS");
+				getServletContext().setAttribute("JOGOS", lista);
+				stmt.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			for (i = 0; i < lista.size(); i++) {
+				if (lista.get(i).getNome().equals(txtNome)){
+					response.sendRedirect("./jogos.jsp?txtNome="+lista.get(i).getNome()+"&txtDificuldade="+lista.get(i).getDificuldade());
+				}
+			}
+
 		}
 	}
 

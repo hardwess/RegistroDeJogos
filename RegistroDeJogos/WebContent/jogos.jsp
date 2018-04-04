@@ -74,7 +74,7 @@ body {
 		}
 	%>
 	<div class="container">
-		<form action="./JogosController" method="post">
+		<form action="./JogosController">
 			<div class="row">
 				<div class="col-sm">
 					<label for="jogoNome">Nome:</label>
