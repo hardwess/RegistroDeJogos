@@ -121,7 +121,8 @@ public class JogosController extends HttpServlet {
 
 			for (i = 0; i < lista.size(); i++) {
 				if (lista.get(i).getNome().equals(txtNome)){
-					response.sendRedirect("./jogos.jsp?txtNome="+lista.get(i).getNome()+"&txtDificuldade="+lista.get(i).getDificuldade());
+					Jogo jogoatual = lista.get(i) ;
+					getServletContext().setAttribute("JogoAtual", jogoatual);
 				}
 			}
 

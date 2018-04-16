@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="entidades.Jogo"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -62,7 +63,7 @@ body {
 	</div>
 	<%
 		String msg = (String) session.getAttribute("MESSAGE");
-
+		Jogo jogoatual = ((Jogo) getServletContext().getAttribute("JogoAtual"));
 		if (msg != null) {
 	%>
 	<div class="alert alert-danger">
@@ -93,12 +94,23 @@ body {
 				</div>
 				<div class="col-sm">
 					<select id="jogoDificuldade" name="txtDificuldade">
-						<option>Fácil</option>
-						<option>Normal</option>
-						<option>Difícil</option>
-						<option>Muito difícil</option>
-						<option>Impossível</option>
+						<option value="Fácil">Fácil</option>
+						<option value="Normal">Normal</option>
+						<option value="Difícil">Difícil</option>
+						<option value="Muito difícil">Muito difícil</option>
+						<option value="Impossível">Impossível</option>
 					</select>
+					<script>
+					var s = "<%=jogoatual%>";
+						var sel = document.getElementById("sel");
+						for (var i = 0; i < sel.options.length; i++) {
+							var optAtual = sel.options[i];
+							if (optAtual.value == s) {
+								optAtual.selected = "selected";
+							}
+							console.log(optAtual);
+						}
+					</script>
 				</div>
 				<div class="col-sm"></div>
 			</div>
